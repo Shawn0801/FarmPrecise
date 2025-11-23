@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - master
+      - claude/agriculture-dashboard-01MTwsD8b2xkUfoxx2qU4mcn
   workflow_dispatch:
 
 permissions:
