@@ -41,10 +41,34 @@ npm run build
 npm start
 ```
 
+### 部署到 GitHub Pages
+
+本專案已配置自動部署到 GitHub Pages：
+
+1. **啟用 GitHub Pages**：
+   - 前往 GitHub 專案的 Settings > Pages
+   - Source 選擇 "GitHub Actions"
+
+2. **自動部署**：
+   - 推送到 `main` 或 `master` 分支時自動觸發部署
+   - 也可以在 Actions 頁面手動觸發部署
+
+3. **訪問網站**：
+   - 部署完成後，網站會發布在: `https://<username>.github.io/FarmPrecise/`
+
+4. **手動建置靜態檔案**：
+   ```bash
+   npm run build
+   # 靜態檔案會生成在 out/ 目錄
+   ```
+
 ## 專案結構
 
 ```
 FarmPrecise/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml     # GitHub Actions 部署設定
 ├── app/
 │   ├── dashboard/          # 儀表板頁面
 │   │   ├── page.tsx       # 主要儀表板
@@ -54,11 +78,13 @@ FarmPrecise/
 │   ├── page.tsx           # 首頁
 │   └── globals.css        # 全域樣式
 ├── components/            # React 元件
-│   ├── StatCard.tsx      # 統計卡片元件
+│   ├── DashboardClient.tsx # 儀表板客戶端元件
+│   ├── StatCard.tsx       # 統計卡片元件
 │   ├── CropPriceTable.tsx # 價格表格元件
 │   └── TopCropsChart.tsx  # 圖表元件
 ├── lib/
 │   └── api.ts            # API 整合函式
+├── next.config.js        # Next.js 配置（含靜態導出）
 └── package.json
 ```
 
