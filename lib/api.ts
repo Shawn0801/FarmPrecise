@@ -14,7 +14,7 @@ export async function getCropPrices() {
     // 這裡使用政府開放資料平台的農產品批發市場交易行情API
     const response = await fetch(
       'https://data.moa.gov.tw/Service/OpenData/FromM/FarmTransData.aspx',
-      { next: { revalidate: 3600 } } // 快取1小時
+      { cache: 'no-store' }
     );
 
     if (!response.ok) {

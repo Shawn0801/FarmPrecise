@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  output: 'export',
+  basePath: process.env.NODE_ENV === 'production' ? '/FarmPrecise' : '',
+  images: {
+    unoptimized: true,
+  },
+}
 
 module.exports = nextConfig
