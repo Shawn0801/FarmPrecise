@@ -5,17 +5,20 @@
 ## 功能特色
 
 - 📊 即時農產品批發市場交易行情
+- 🌤️ 農業氣象資訊與提醒
 - 📈 熱門農產品趨勢分析
+- 📰 最新農業消息
 - 🌱 農業統計資料視覺化
-- 🎨 使用 Tailwind CSS 設計的響應式介面
-- ⚡ Next.js 15 App Router 架構
-- 🔄 自動資料更新與快取
+- 🎨 使用 Tailwind CSS + PrimeNG 設計的響應式介面
+- ⚡ Angular 17 獨立元件架構
 
 ## 技術架構
 
-- **框架**: Next.js 15 (App Router)
+- **框架**: Angular 17 (Standalone Components)
 - **語言**: TypeScript
 - **樣式**: Tailwind CSS
+- **UI 元件庫**: PrimeNG
+- **部署**: GitHub Pages
 - **資料來源**: 行政院農業委員會農業資料開放平台
 
 ## 快速開始
@@ -29,16 +32,15 @@ npm install
 ### 開發模式
 
 ```bash
-npm run dev
+npm start
 ```
 
-在瀏覽器中開啟 [http://localhost:3000](http://localhost:3000)
+在瀏覽器中開啟 [http://localhost:4200](http://localhost:4200)
 
 ### 建置生產版本
 
 ```bash
 npm run build
-npm start
 ```
 
 ### 部署到 GitHub Pages
@@ -59,7 +61,7 @@ npm start
 4. **手動建置靜態檔案**：
    ```bash
    npm run build
-   # 靜態檔案會生成在 out/ 目錄
+   # 靜態檔案會生成在 dist/farmprecise/browser 目錄
    ```
 
 ## 專案結構
@@ -68,23 +70,25 @@ npm start
 FarmPrecise/
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml     # GitHub Actions 部署設定
-├── app/
-│   ├── dashboard/          # 儀表板頁面
-│   │   ├── page.tsx       # 主要儀表板
-│   │   ├── loading.tsx    # 載入畫面
-│   │   └── error.tsx      # 錯誤處理
-│   ├── layout.tsx         # 根佈局
-│   ├── page.tsx           # 首頁
-│   └── globals.css        # 全域樣式
-├── components/            # React 元件
-│   ├── DashboardClient.tsx # 儀表板客戶端元件
-│   ├── StatCard.tsx       # 統計卡片元件
-│   ├── CropPriceTable.tsx # 價格表格元件
-│   └── TopCropsChart.tsx  # 圖表元件
-├── lib/
-│   └── api.ts            # API 整合函式
-├── next.config.js        # Next.js 配置（含靜態導出）
+│       └── deploy.yml            # GitHub Actions 部署設定
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── home/            # 首頁元件
+│   │   │   ├── dashboard/       # 儀表板主頁
+│   │   │   ├── weather-section/ # 農業氣象區
+│   │   │   ├── trading-section/ # 交易行情區
+│   │   │   └── news-section/    # 最新消息區
+│   │   ├── services/
+│   │   │   └── agriculture.service.ts  # 農業資料服務
+│   │   ├── app.component.ts     # 根元件
+│   │   └── app.routes.ts        # 路由設定
+│   ├── assets/                  # 靜態資源
+│   ├── index.html              # 入口 HTML
+│   ├── main.ts                 # 應用程式進入點
+│   └── styles.css              # 全域樣式
+├── angular.json                # Angular 配置
+├── tailwind.config.js         # Tailwind CSS 配置
 └── package.json
 ```
 
@@ -102,27 +106,67 @@ FarmPrecise/
 - 快速導航至儀表板
 
 ### 儀表板 (`/dashboard`)
-- **統計卡片**: 顯示農戶總數、耕地面積、年產量、批發市場數量
-- **熱門農產品圖表**: 視覺化呈現交易最頻繁的農產品
-- **市場動態**: 即時市場趨勢資訊
-- **交易行情表格**: 詳細的農產品交易資料
+儀表板提供三大功能區，透過側邊導航欄切換：
+
+#### 🌤️ 農業氣象
+- 氣象提醒與警示
+- 主要產區天氣資訊（溫度、濕度、降雨量）
+- 農事建議與注意事項
+
+#### 📊 交易行情
+- 農業統計資料卡片（農戶總數、耕地面積、年產量、批發市場）
+- 熱門農產品圖表
+- 市場動態資訊
+- 詳細的農產品交易行情表格
+
+#### 📰 最新消息
+- 農業政策、技術、市場、活動分類
+- 新聞卡片展示
+- 詳細內容彈窗
+- 新聞分類過濾
+
+## PrimeNG 元件使用
+
+本專案使用以下 PrimeNG 元件：
+- **Button**: 按鈕元件
+- **Card**: 卡片容器
+- **Table**: 資料表格
+- **Dialog**: 對話框
+- **ProgressBar**: 進度條
+- **Tag**: 標籤
+- **Message**: 訊息提示
+- **TabMenu**: 分頁選單
 
 ## 開發說明
 
-### 新增 API 整合
-
-在 `lib/api.ts` 中新增 API 函式:
-
-```typescript
-export async function getNewData() {
-  const response = await fetch('API_URL');
-  return response.json();
-}
-```
-
 ### 新增元件
 
-在 `components/` 目錄下建立新元件，使用 Tailwind CSS 進行樣式設計。
+使用 Angular CLI 生成新元件：
+
+```bash
+ng generate component components/your-component --standalone
+```
+
+### 新增服務
+
+```bash
+ng generate service services/your-service
+```
+
+### 整合新 API
+
+在 `src/app/services/agriculture.service.ts` 中新增 API 函式:
+
+```typescript
+getNewData(): Observable<any> {
+  return this.http.get<any>('API_URL').pipe(
+    catchError(error => {
+      console.error('Error:', error);
+      return of([]);
+    })
+  );
+}
+```
 
 ## 授權
 

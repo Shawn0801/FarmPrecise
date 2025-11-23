@@ -1,0 +1,142 @@
+<div class="space-y-6" *ngIf="!loading; else loadingTemplate">
+  <!-- Header -->
+  <div>
+    <h1 class="text-3xl font-bold text-gray-800">📊 交易行情</h1>
+    <p class="text-gray-500 mt-2">農產品批發市場即時交易資訊</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-gradient-to-br from-green-100 to-green-50 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 mb-1">農戶總數</p>
+          <p class="text-3xl font-bold text-gray-800">{{ stats.totalFarms | number }}</p>
+          <p class="text-xs text-gray-500 mt-2">全台登記農戶數量</p>
+        </div>
+        <div class="text-5xl opacity-50">👨‍🌾</div>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 mb-1">耕地面積</p>
+          <p class="text-3xl font-bold text-gray-800">{{ stats.totalArea | number }}</p>
+          <p class="text-xs text-gray-500 mt-2">總耕地面積 (公頃)</p>
+        </div>
+        <div class="text-5xl opacity-50">🌱</div>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 mb-1">年產量</p>
+          <p class="text-3xl font-bold text-gray-800">{{ stats.totalProduction | number }}</p>
+          <p class="text-xs text-gray-500 mt-2">農產品年產量 (公噸)</p>
+        </div>
+        <div class="text-5xl opacity-50">🚜</div>
+      </div>
+    </div>
+
+    <div class="bg-gradient-to-br from-purple-100 to-purple-50 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600 mb-1">批發市場</p>
+          <p class="text-3xl font-bold text-gray-800">{{ stats.activeMarkets }}</p>
+          <p class="text-xs text-gray-500 mt-2">活躍批發市場數量</p>
+        </div>
+        <div class="text-5xl opacity-50">🏪</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      <p-card header="🏆 熱門農產品" styleClass="shadow-md">
+        <div class="space-y-4" *ngIf="topCrops.length > 0; else noCropsData">
+          <div *ngFor="let crop of topCrops; let i = index">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-sm font-medium text-gray-700">{{ crop.name }}</span>
+              <span class="text-sm text-gray-500">{{ crop.count }} 筆交易</span>
+            </div>
+            <p-progressBar [value]="getPercentage(crop.count)"
+                          [showValue]="false"
+                          [style]="{'height': '0.75rem'}"
+                          [ngClass]="'progress-' + getProgressColor(i)"></p-progressBar>
+          </div>
+        </div>
+        <ng-template #noCropsData>
+          <p class="text-gray-500 text-center py-8">暫無資料</p>
+        </ng-template>
+      </p-card>
+    </div>
+
+    <div>
+      <p-card header="📈 市場動態" styleClass="shadow-md">
+        <div class="space-y-4">
+          <div class="border-l-4 border-green-500 pl-4">
+            <p class="text-sm font-medium text-gray-700">價格穩定</p>
+            <p class="text-xs text-gray-500 mt-1">主要蔬果價格保持穩定</p>
+          </div>
+          <div class="border-l-4 border-blue-500 pl-4">
+            <p class="text-sm font-medium text-gray-700">交易活躍</p>
+            <p class="text-xs text-gray-500 mt-1">今日交易量較昨日增加</p>
+          </div>
+          <div class="border-l-4 border-yellow-500 pl-4">
+            <p class="text-sm font-medium text-gray-700">季節轉換</p>
+            <p class="text-xs text-gray-500 mt-1">當季作物開始上市</p>
+          </div>
+          <div class="border-l-4 border-purple-500 pl-4">
+            <p class="text-sm font-medium text-gray-700">產量預估</p>
+            <p class="text-xs text-gray-500 mt-1">下季產量預期樂觀</p>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Price Table -->
+  <p-card header="📊 農產品批發市場交易行情" styleClass="shadow-md">
+    <p-table [value]="cropPrices" [paginator]="true" [rows]="10" *ngIf="cropPrices.length > 0; else noData">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>作物名稱</th>
+          <th>市場</th>
+          <th>交易日期</th>
+          <th>平均價 (元/公斤)</th>
+          <th>交易量 (公斤)</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td class="font-medium">{{ item['作物名稱'] }}</td>
+          <td>{{ item['市場名稱'] }}</td>
+          <td>{{ item['交易日期'] }}</td>
+          <td class="font-bold">${{ item['平均價'] || '0' | number:'1.2-2' }}</td>
+          <td>{{ item['交易量'] || '0' | number }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+    <ng-template #noData>
+      <p class="text-gray-500 text-center py-8">暫無資料</p>
+    </ng-template>
+  </p-card>
+
+  <!-- Update Time -->
+  <div class="text-center text-sm text-gray-500">
+    <p>資料來源: 行政院農業委員會農業資料開放平台</p>
+    <p class="mt-1">更新時間: {{ currentTime | date:'yyyy-MM-dd HH:mm:ss':'':'zh-TW' }}</p>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="flex items-center justify-center h-64">
+    <div class="text-center">
+      <i class="pi pi-spin pi-spinner text-4xl text-green-600 mb-4"></i>
+      <p class="text-gray-600">載入交易資料中...</p>
+    </div>
+  </div>
+</ng-template>

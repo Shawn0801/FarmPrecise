@@ -1,0 +1,89 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div>
+    <h1 class="text-3xl font-bold text-gray-800">🌤️ 農業氣象</h1>
+    <p class="text-gray-500 mt-2">即時氣象資訊與農業氣象提醒</p>
+  </div>
+
+  <!-- Weather Alerts -->
+  <p-card header="🔔 氣象提醒" styleClass="shadow-md">
+    <div class="space-y-3">
+      <div *ngFor="let alert of alerts"
+           class="p-4 rounded-r-lg border-l-4"
+           [ngClass]="{
+             'bg-red-50 border-red-300 text-red-800': alert.severity === 'warn',
+             'bg-blue-50 border-blue-300 text-blue-800': alert.severity === 'info',
+             'bg-green-50 border-green-300 text-green-800': alert.severity === 'success'
+           }">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">
+            {{ alert.severity === 'warn' ? '⚠️' : alert.severity === 'info' ? 'ℹ️' : '✅' }}
+          </span>
+          <div class="flex-1">
+            <h3 class="font-semibold mb-1">{{ alert.title }}</h3>
+            <p class="text-sm mb-2">{{ alert.message }}</p>
+            <p class="text-xs opacity-75">{{ alert.time }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Weather Cards -->
+  <div>
+    <h2 class="text-xl font-bold text-gray-800 mb-4">主要產區天氣</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div *ngFor="let weather of weatherData"
+           class="bg-gradient-to-br from-blue-50 to-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-800">{{ weather.location }}</h3>
+          <span class="text-4xl">{{ weather.icon }}</span>
+        </div>
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-600">溫度</span>
+            <span class="text-2xl font-bold text-orange-600">{{ weather.temperature }}°C</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">濕度</span>
+            <span class="font-medium text-blue-600">{{ weather.humidity }}%</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">降雨量</span>
+            <span class="font-medium text-green-600">{{ weather.rainfall }}mm</span>
+          </div>
+          <div class="pt-2 border-t border-gray-200">
+            <p class="text-sm text-gray-500 text-center">{{ weather.condition }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weather Tips -->
+  <p-card header="💡 農事建議" styleClass="shadow-md bg-gradient-to-br from-green-50 to-white">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-white rounded-lg p-4 border border-green-200">
+        <h3 class="font-semibold text-green-700 mb-2">🌱 本週適宜作業</h3>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li>• 水稻田間管理與病蟲害防治</li>
+          <li>• 蔬菜施肥與除草作業</li>
+          <li>• 果樹修剪與整枝</li>
+        </ul>
+      </div>
+      <div class="bg-white rounded-lg p-4 border border-yellow-200">
+        <h3 class="font-semibold text-yellow-700 mb-2">⚠️ 注意事項</h3>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li>• 注意午後雷陣雨，提前收割成熟作物</li>
+          <li>• 高溫時段避免噴灑農藥</li>
+          <li>• 保持田間排水系統暢通</li>
+        </ul>
+      </div>
+    </div>
+  </p-card>
+
+  <!-- Update Time -->
+  <div class="text-center text-sm text-gray-500">
+    <p>更新時間: {{ currentTime | date:'yyyy-MM-dd HH:mm:ss':'':'zh-TW' }}</p>
+  </div>
+</div>

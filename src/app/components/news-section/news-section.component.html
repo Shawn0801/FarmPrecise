@@ -1,0 +1,58 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div>
+    <h1 class="text-3xl font-bold text-gray-800">📰 最新消息</h1>
+    <p class="text-gray-500 mt-2">農業相關政策、技術與市場動態</p>
+  </div>
+
+  <!-- News Filter -->
+  <p-card styleClass="shadow-md">
+    <div class="flex flex-wrap gap-2">
+      <p-button label="全部" icon="pi pi-list" styleClass="p-button-sm" [outlined]="true"></p-button>
+      <p-button label="政策" icon="pi pi-briefcase" styleClass="p-button-sm p-button-info" [outlined]="true"></p-button>
+      <p-button label="技術" icon="pi pi-cog" styleClass="p-button-sm p-button-success" [outlined]="true"></p-button>
+      <p-button label="市場" icon="pi pi-chart-line" styleClass="p-button-sm p-button-warning" [outlined]="true"></p-button>
+      <p-button label="活動" icon="pi pi-calendar" styleClass="p-button-sm p-button-danger" [outlined]="true"></p-button>
+    </div>
+  </p-card>
+
+  <!-- News Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div *ngFor="let item of news"
+         class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer overflow-hidden"
+         (click)="showNewsDetail(item)">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-3">
+          <p-tag [value]="item.category" [severity]="getCategorySeverity(item.category)"></p-tag>
+          <span class="text-xs text-gray-500">{{ item.date }}</span>
+        </div>
+        <h3 class="text-lg font-bold text-gray-800 mb-2 hover:text-green-600">
+          {{ item.title }}
+        </h3>
+        <p class="text-sm text-gray-600 line-clamp-2">{{ item.summary }}</p>
+        <div class="mt-4 flex items-center text-green-600 text-sm font-medium">
+          閱讀更多 →
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- News Dialog -->
+  <p-dialog [(visible)]="displayDialog" [modal]="true" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <ng-template pTemplate="header" *ngIf="selectedNews">
+      <div class="flex items-center gap-3">
+        <p-tag [value]="selectedNews.category" [severity]="getCategorySeverity(selectedNews.category)"></p-tag>
+        <span class="text-lg font-bold">{{ selectedNews.title }}</span>
+      </div>
+    </ng-template>
+    <div *ngIf="selectedNews">
+      <p class="text-sm text-gray-500 mb-4">{{ selectedNews.date }}</p>
+      <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ selectedNews.content }}</p>
+    </div>
+  </p-dialog>
+
+  <!-- Update Time -->
+  <div class="text-center text-sm text-gray-500">
+    <p>更新時間: {{ currentTime | date:'yyyy-MM-dd HH:mm:ss':'':'zh-TW' }}</p>
+  </div>
+</div>
